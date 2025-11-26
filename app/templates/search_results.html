@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+<h2>Search Results{% if query %} for "{{ query }}"{% endif %}</h2>
+{% for post in results %}
+  <div class="card mb-3">
+    <div class="card-body">
+      <h5><a href="{{ url_for('main.post', post_id=post.id) }}">{{ post.title }}</a></h5>
+      <p>{{ post.content[:100] }}{% if post.content|length > 100 %}...{% endif %}</p>
+      <small class="text-muted">By <a href="{{ url_for('main.profile', username=post.author.username) }}">{{ post.author.username }}</a> on {{ post.date_posted.strftime("%b %d, %Y") }}</small>
+    </div>
+  </div>
+{% else %}
+  <div>No posts found.</div>
+{% endfor %}
+{% endblock %}

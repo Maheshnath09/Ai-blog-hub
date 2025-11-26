@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<ul class="nav nav-tabs mb-3">
+  <li class="nav-item">
+    <a class="nav-link {% if tab=='for_you' %}active{% endif %}" href="{{ url_for('main.index', tab='for_you') }}">For you</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if tab=='featured' %}active{% endif %}" href="{{ url_for('main.index', tab='featured') }}">Featured</a>
+  </li>
+</ul>
+
+{% for post in posts %}
+  <div class="card mb-3">
+    <div class="row g-0">
+      {% if post.image_file %}
+      <div class="col-md-3 d-flex align-items-center justify-content-center">
+        <img src="{{ url_for('static', filename='post_images/' + post.image_file) }}" class="img-fluid rounded-start" style="max-height:150px; object-fit:cover;">
+      </div>
+      {% endif %}
+      <div class="col-md-9">
+        <div class="card-body">
+          <a href="{{ url_for('main.profile', username=post.author.username) }}">
+            <small class="text-muted">By {{ post.author.username }}</small>
+          </a>
+          <h5 class="card-title"><a href="{{ url_for('main.post', post_id=post.id) }}">{{ post.title }}</a></h5>
+          <p class="card-text">{{ post.content[:120] }}{% if post.content|length > 120 %}...{% endif %}</p>
+          <div>
+            <small class="text-muted">{{ post.date_posted.strftime("%b %d, %Y") }}</small>
+            {% if current_user.is_authenticated %}
+              <form method="POST" action="{{ url_for('main.save_post', post_id=post.id) }}" style="display:inline;">
+                {% if current_user.has_saved_post(post) %}
+                  <button type="submit" class="btn btn-link p-0 ms-2" formaction="{{ url_for('main.unsave_post', post_id=post.id) }}"><i class="bi bi-bookmark-fill"></i> Saved</button>
+                {% else %}
+                  <button type="submit" class="btn btn-link p-0 ms-2"><i class="bi bi-bookmark"></i> Save</button>
+                {% endif %}
+              </form>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% else %}
+  <div>No posts yet.</div>
+{% endfor %}
+{% endblock %}

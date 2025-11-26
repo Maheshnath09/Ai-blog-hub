@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="card mb-4">
+            {% if post.image_file %}
+                <img src="{{ url_for('static', filename='post_images/' + post.image_file) }}"
+                     class="card-img-top" style="max-height:350px; object-fit:cover;" alt="Blog image">
+            {% endif %}
+            <div class="card-body">
+                <h1 class="card-title">{{ post.title }}</h1>
+                <p class="text-muted mb-1" style="font-size: 0.95em;">
+                    By <strong>{{ post.author.username }}</strong>
+                    on {{ post.date_posted.strftime('%Y-%m-%d') }}
+                    {% if current_user.is_authenticated and post.author != current_user %}
+                        {% if is_following %}
+                            <form action="{{ url_for('main.unfollow', user_id=post.author.id) }}" method="post" style="display:inline;">
+                                <input type="hidden" name="post_id" value="{{ post.id }}">
+                                <button type="submit" class="btn btn-outline-secondary btn-sm ms-2">Unfollow</button>
+                            </form>
+                        {% else %}
+                            <form action="{{ url_for('main.follow', user_id=post.author.id) }}" method="post" style="display:inline;">
+                                <input type="hidden" name="post_id" value="{{ post.id }}">
+                                <button type="submit" class="btn btn-outline-primary btn-sm ms-2">Follow</button>
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                </p>
+                <p>{{ post.content }}</p>
+                <p><strong>AI Summary:</strong> {{ post.summary }}</p>
+                {% if current_user.is_authenticated and post.author == current_user %}
+                    <a href="{{ url_for('main.edit_post', post_id=post.id) }}" class="btn btn-secondary">Edit</a>
+                    <form method="POST" action="{{ url_for('main.delete_post', post_id=post.id) }}" style="display:inline;">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+
+        <h3 class="mt-4">Comments</h3>
+        {% for comment in post.comments %}
+            <div class="card mb-2">
+                <div class="card-body">
+                    <p>{{ comment.content }}</p>
+                    <p>
+                        <small>
+                            By {{ comment.author.username }}
+                            on {{ comment.date_posted.strftime('%Y-%m-%d') }}
+                            | Sentiment: {{ comment.sentiment }}
+                        </small>
+                    </p>
+                </div>
+            </div>
+        {% else %}
+            <div class="text-muted mb-3">No comments yet.</div>
+        {% endfor %}
+
+        <h4>Add Comment</h4>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.content(class="form-control", rows=3) }}
+                {% for error in form.content.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            {{ form.submit(class="btn btn-primary") }}
+        </form>
+
+        <h3 class="mt-4">Recommended Posts (AI-Powered)</h3>
+        {% if recommendations %}
+            <ul>
+                {% for rec in recommendations %}
+                    <li><a href="{{ url_for('main.post', post_id=rec.id) }}">{{ rec.title }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="text-muted">No recommendations yet.</div>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}{{ user.username }}'s Profile{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-4">
+    <div class="card mb-3">
+      <img src="{{ url_for('static', filename='profile_images/' ~ (user.profile_image or 'default.jpg')) }}" class="card-img-top" style="object-fit:cover; max-height:240px;">
+      <div class="card-body">
+        <h4 class="card-title">{{ user.username }}</h4>
+        <p class="card-text">{{ user.bio or "No bio yet." }}</p>
+        {% if is_my_profile %}
+          <a href="{{ url_for('main.edit_profile') }}" class="btn btn-outline-primary btn-sm">Edit Profile</a>
+        {% elif current_user.is_authenticated %}
+          {% if is_following %}
+            <form method="POST" action="{{ url_for('main.unfollow', user_id=user.id) }}">
+              <button class="btn btn-outline-secondary btn-sm">Unfollow</button>
+            </form>
+          {% else %}
+            <form method="POST" action="{{ url_for('main.follow', user_id=user.id) }}">
+              <button class="btn btn-outline-primary btn-sm">Follow</button>
+            </form>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <h4>{{ user.username }}'s Blogs</h4>
+    {% for post in posts %}
+      <div class="card mb-2">
+        <div class="card-body">
+          <h5><a href="{{ url_for('main.post', post_id=post.id) }}">{{ post.title }}</a></h5>
+          <p>{{ post.content[:100] }}{% if post.content|length > 100 %}...{% endif %}</p>
+          <small class="text-muted">{{ post.date_posted.strftime("%b %d, %Y") }}</small>
+        </div>
+      </div>
+    {% else %}
+      <div class="text-muted">No posts yet.</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

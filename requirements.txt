@@ -1,0 +1,11 @@
+flask==3.0.3
+flask-sqlalchemy==3.1.1
+flask-login==0.6.3
+flask-wtf==1.2.1
+flask-migrate==4.0.5  # For database migrations
+werkzeug==3.0.3  # For password hashing
+transformers==4.44.2  # For AI summarization
+torch==2.6.0  # Required by transformers
+textblob==0.18.0.post0  # For sentiment analysis
+scikit-learn==1.5.1  # For recommendations
+bootstrap-flask==2.4.0  # Easier Bootstrap integration with Flask

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Saved Posts{% endblock %}
+
+{% block content %}
+<h2>Saved Posts</h2>
+{% for post in posts %}
+  <div class="card mb-3">
+    <div class="card-body">
+      <a href="{{ url_for('main.post', post_id=post.id) }}"><h5>{{ post.title }}</h5></a>
+      <p>{{ post.content[:100] }}{% if post.content|length > 100 %}...{% endif %}</p>
+      <small class="text-muted">{{ post.date_posted.strftime("%b %d, %Y") }}</small>
+    </div>
+  </div>
+{% else %}
+  <div>No saved posts yet.</div>
+{% endfor %}
+{% endblock %}
