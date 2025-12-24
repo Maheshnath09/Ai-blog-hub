@@ -8,14 +8,24 @@ if os.environ.get('VERCEL'):
     with app.app_context():
         try:
             from app import db
+            from app.models import User
             
-            # Only create tables if they don't exist (don't drop existing data)
+            # Force recreate database with your account
+            db.drop_all()
             db.create_all()
-            print("Database tables created/updated successfully")
+            
+            # Create your user account
+            user = User(
+                username='mahesh_23',
+                email='maheshnath2143@gmail.com'
+            )
+            user.set_password('mahesh@09')  # Your PostgreSQL password
+            db.session.add(user)
+            db.session.commit()
+            print("Database recreated with your account")
                 
         except Exception as e:
             print(f"Database initialization error: {e}")
-            # Continue anyway - don't crash the app
 
 if __name__ == "__main__":
     app.run()
