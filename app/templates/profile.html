@@ -8,7 +8,9 @@
       {% if user.profile_image and user.profile_image != 'default.jpg' %}
         <img src="{{ url_for('static', filename='profile_images/' ~ user.profile_image) }}" class="card-img-top" style="object-fit:cover; max-height:240px;">
       {% else %}
-        <img src="https://via.placeholder.com/240x240/6c757d/ffffff?text=Profile" class="card-img-top" style="object-fit:cover; max-height:240px;">
+        <div class="card-img-top d-flex align-items-center justify-content-center" style="height:240px; background-color:#6c757d; color:white; font-size:18px;">
+          Profile
+        </div>
       {% endif %}
       <div class="card-body">
         <h4 class="card-title">{{ user.username }}</h4>
