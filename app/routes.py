@@ -11,18 +11,13 @@ from .forms import RegistrationForm, LoginForm, PostForm, CommentForm, EditProfi
 main = Blueprint('main', __name__)
 
 def save_image(form_image, folder='post_images'):
-    """Save image as base64 string for Vercel compatibility"""
+    """Handle image upload for Vercel - return default for now"""
     try:
-        # Read the image file
-        image_data = form_image.read()
-        # Convert to base64
-        image_base64 = base64.b64encode(image_data).decode('utf-8')
-        # Get file extension
-        _, f_ext = os.path.splitext(form_image.filename)
-        # Create a data URL
-        mime_type = 'image/jpeg' if f_ext.lower() in ['.jpg', '.jpeg'] else f'image/{f_ext[1:].lower()}'
-        data_url = f'data:{mime_type};base64,{image_base64}'
-        return data_url
+        if form_image and form_image.filename:
+            # For Vercel deployment, just return default image
+            # In production, upload to cloud storage (AWS S3, Cloudinary, etc.)
+            return 'default.jpg'
+        return 'default.jpg'
     except Exception as e:
         print(f"Image save error: {e}")
         return 'default.jpg'
