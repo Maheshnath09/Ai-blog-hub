@@ -93,7 +93,7 @@ The application will be available at `http://localhost:5000`
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone <[repository-url](https://github.com/Maheshnath09/Ai-blog-hub)>
    cd ai_blog_hub
    ```
 
