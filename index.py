@@ -3,14 +3,17 @@ import os
 
 app = create_app()
 
-# Initialize database tables for Vercel
+# Initialize database for Vercel
 if os.environ.get('VERCEL'):
     with app.app_context():
         try:
             from app import db
-            # Create all tables
+            
+            # Drop and recreate all tables with correct schema
+            db.drop_all()
             db.create_all()
-            print("Database tables created successfully")
+            print("Database tables recreated successfully")
+                
         except Exception as e:
             print(f"Database initialization error: {e}")
             # Continue anyway - don't crash the app
