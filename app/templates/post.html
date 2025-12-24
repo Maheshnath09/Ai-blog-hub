@@ -5,14 +5,9 @@
 {% block content %}
     <div class="container">
         <div class="card mb-4">
-            {% if post.image_file %}
-                {% if post.image_file.startswith('data:') %}
-                    <img src="{{ post.image_file }}"
-                         class="card-img-top" style="max-height:350px; object-fit:cover;" alt="Blog image">
-                {% else %}
-                    <img src="{{ url_for('static', filename='post_images/' + post.image_file) }}"
-                         class="card-img-top" style="max-height:350px; object-fit:cover;" alt="Blog image">
-                {% endif %}
+            {% if post.image_file and post.image_file != 'default.jpg' %}
+                <img src="{{ url_for('static', filename='post_images/' + post.image_file) }}"
+                     class="card-img-top" style="max-height:350px; object-fit:cover;" alt="Blog image">
             {% endif %}
             <div class="card-body">
                 <h1 class="card-title">{{ post.title }}</h1>

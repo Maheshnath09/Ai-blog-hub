@@ -5,7 +5,11 @@
 <div class="row">
   <div class="col-md-4">
     <div class="card mb-3">
-      <img src="{{ url_for('static', filename='profile_images/' ~ (user.profile_image or 'default.jpg')) }}" class="card-img-top" style="object-fit:cover; max-height:240px;">
+      {% if user.profile_image and user.profile_image != 'default.jpg' %}
+        <img src="{{ url_for('static', filename='profile_images/' ~ user.profile_image) }}" class="card-img-top" style="object-fit:cover; max-height:240px;">
+      {% else %}
+        <img src="https://via.placeholder.com/240x240/6c757d/ffffff?text=Profile" class="card-img-top" style="object-fit:cover; max-height:240px;">
+      {% endif %}
       <div class="card-body">
         <h4 class="card-title">{{ user.username }}</h4>
         <p class="card-text">{{ user.bio or "No bio yet." }}</p>
