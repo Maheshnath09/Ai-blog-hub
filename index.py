@@ -9,10 +9,10 @@ if os.environ.get('VERCEL'):
         try:
             from app import db
             
-            # Drop and recreate all tables with correct schema
+            # Drop and recreate all tables with updated schema
             db.drop_all()
             db.create_all()
-            print("Database tables recreated successfully")
+            print("Database tables recreated with updated schema")
                 
         except Exception as e:
             print(f"Database initialization error: {e}")

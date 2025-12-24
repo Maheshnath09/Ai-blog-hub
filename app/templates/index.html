@@ -17,7 +17,11 @@
     <div class="row g-0">
       {% if post.image_file %}
       <div class="col-md-3 d-flex align-items-center justify-content-center">
-        <img src="{{ url_for('static', filename='post_images/' + post.image_file) }}" class="img-fluid rounded-start" style="max-height:150px; object-fit:cover;">
+        {% if post.image_file.startswith('data:') %}
+          <img src="{{ post.image_file }}" class="img-fluid rounded-start" style="max-height:150px; object-fit:cover;">
+        {% else %}
+          <img src="{{ url_for('static', filename='post_images/' + post.image_file) }}" class="img-fluid rounded-start" style="max-height:150px; object-fit:cover;">
+        {% endif %}
       </div>
       {% endif %}
       <div class="col-md-9">

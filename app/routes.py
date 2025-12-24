@@ -1,5 +1,6 @@
 import os
 import uuid
+import base64
 from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app, abort
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.utils import secure_filename
@@ -10,14 +11,21 @@ from .forms import RegistrationForm, LoginForm, PostForm, CommentForm, EditProfi
 main = Blueprint('main', __name__)
 
 def save_image(form_image, folder='post_images'):
-    random_hex = uuid.uuid4().hex
-    _, f_ext = os.path.splitext(form_image.filename)
-    filename = random_hex + f_ext
-    full_folder = os.path.join(current_app.root_path, 'static', folder)
-    os.makedirs(full_folder, exist_ok=True)
-    image_path = os.path.join(full_folder, filename)
-    form_image.save(image_path)
-    return filename
+    """Save image as base64 string for Vercel compatibility"""
+    try:
+        # Read the image file
+        image_data = form_image.read()
+        # Convert to base64
+        image_base64 = base64.b64encode(image_data).decode('utf-8')
+        # Get file extension
+        _, f_ext = os.path.splitext(form_image.filename)
+        # Create a data URL
+        mime_type = 'image/jpeg' if f_ext.lower() in ['.jpg', '.jpeg'] else f'image/{f_ext[1:].lower()}'
+        data_url = f'data:{mime_type};base64,{image_base64}'
+        return data_url
+    except Exception as e:
+        print(f"Image save error: {e}")
+        return 'default.jpg'
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
