@@ -7,3 +7,4 @@ werkzeug==3.0.3
 textblob==0.18.0.post0
 bootstrap-flask==2.4.0
 psycopg2-binary==2.9.9
+email-validator==2.1.0
