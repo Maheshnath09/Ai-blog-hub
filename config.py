@@ -3,9 +3,9 @@ import os
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or '151033b81c28f882895d0d3865735597230b9b51083e7e3f'
     
-    # Use PostgreSQL for Vercel deployment, SQLite for local
+    # Use in-memory SQLite for Vercel (temporary solution)
     if os.environ.get('VERCEL'):
-        SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or os.environ.get('POSTGRES_URL')
+        SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
     else:
         basedir = os.path.abspath(os.path.dirname(__file__))
         SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'instance', 'blog.db')
